@@ -1,5 +1,29 @@
 /** @type {Detox.DetoxConfig} */
 module.exports = {
+  artifacts: {
+    rootDir: '.artifacts',
+    plugins: {
+      instruments: {'enabled': false},
+      log: {'enabled': true},
+      uiHierarchy: 'enabled',
+      screenshot: {
+        shouldTakeAutomaticSnapshots: true,
+        keepOnlyFailedTestsArtifacts: true,
+        takeWhen: {
+          testStart: false,
+          testDone: true
+        }
+      },
+      video: {
+        android: {
+          bitRate: 4000000
+        },
+        simulator: {
+          codec: 'hevc'
+        }
+      }
+    }
+  },
   testRunner: {
     args: {
       '$0': 'jest',
@@ -12,13 +36,13 @@ module.exports = {
   apps: {
     'ios.debug': {
       type: 'ios.app',
-       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/TodoApp.app',
-      build: 'xcodebuild -workspace ios/TodoApp.xcworkspace -scheme TodoApp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/QualityImprovement.app',
+      build: 'xcodebuild -workspace ios/QualityImprovement.xcworkspace -scheme QualityImprovement -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'ios.release': {
       type: 'ios.app',
-       binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/TodoApp.app',
-      build: 'xcodebuild -workspace ios/TodoApp.xcworkspace -scheme TodoApp -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/QualityImprovement.app',
+      build: 'xcodebuild -workspace ios/QualityImprovement.xcworkspace -scheme QualityImprovement -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.debug': {
       type: 'android.apk',
@@ -57,7 +81,13 @@ module.exports = {
   configurations: {
     'ios.sim.debug': {
       device: 'simulator',
-      app: 'ios.debug'
+      app: 'ios.debug',
+      artifacts: {
+        rootDir: '.artifacts/ios',
+        plugins: {
+          instruments: 'all'
+        }
+      }
     },
     'ios.sim.release': {
       device: 'simulator',
